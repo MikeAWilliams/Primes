@@ -14,12 +14,12 @@
 using namespace std;
 using namespace std::chrono;
 
+template <long sieveSize>
 class prime_sieve
 {
   private:
 
-      long sieveSize = 0;
-      vector<bool> Bits;
+      bitset<sieveSize> Bits;
       const std::map<const long long, const int> resultsDictionary = 
       {
             {          10LL, 4         },               // Historical data for validating our results - the number of primes
@@ -45,13 +45,17 @@ class prime_sieve
 
    public:
 
-      prime_sieve(long n) 
-        : Bits(n, true), sieveSize(n)
+      prime_sieve() 
       {
       }
 
       ~prime_sieve()
       {
+      }
+
+      void reset()
+      {
+        Bits.set();
       }
 
       void runSieve()
@@ -123,10 +127,11 @@ int main()
 {
     auto passes = 0;
     auto tStart = steady_clock::now();
+    prime_sieve<1000000> sieve;
 
     while (true)
     {
-        prime_sieve sieve(1000000L);
+        sieve.reset();
         sieve.runSieve();
         passes++;
         if (duration_cast<seconds>(steady_clock::now() - tStart).count() >= 5)
